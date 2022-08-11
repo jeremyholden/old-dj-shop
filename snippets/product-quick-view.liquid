@@ -1,0 +1,109 @@
+{% comment %}
+  Product Quick View uses Foundation for Zurb. Written by Cam Gould
+  https://github.com/Cam/Shopify-Theme-Framework
+  Adapted for Timber Framework by Jason Subers
+{% endcomment %}
+<!-- product-quick-view.liquid -->
+
+<div data-options="disable_for_touch:true" class="quick-view" title="{{ product.title }} Quick View">
+    <a href="#" data-reveal-id="myModal{{ product.url | within: collection | replace: '/', '-' }}">
+        <i class="icon dg-icon-search"></i> Quick View
+    </a>
+</div>
+
+<div id="myModal{{ product.url | within: collection | replace: '/', '-' }}" class="reveal-modal expand product-single" style="position:fixed;" data-reveal>
+    <div class="grid__item large--two-fifths text-center">
+        <!-- for product image zoom - use the #id sets here for different behaviour - we add the stripped product URL to give it a unique ID -->
+        <script>
+            $(document).ready(function(){
+                $('#zoom{{ product.url | within: collection | replace: '/', '-' }}').zoom();
+                $('#grab{{ product.url | within: collection | replace: '/', '-' }}').zoom({ on:'grab' });
+                $('#click{{ product.url | within: collection | replace: '/', '-' }}').zoom({ on:'click' });          
+                $('#toggle{{ product.url | within: collection | replace: '/', '-' }}').zoom({ on:'toggle' });
+            });
+        </script>
+        
+        <div class="zoom" id="zoom{{ product.url | within: collection | replace: '/', '-' }}">
+            <img class="zoom-original" src="{{ product.featured_image | product_img_url: 'master' }}" alt="{{ product.title | escape  }}" />
+        </div>
+    </div>
+    <div class="grid__item large--three-fifths">
+        <h1 itemprop="name">{{ product.title }}</h1>
+        <div id="product-description" class="rte" itemprop="description">
+            <p>{{ product.description | strip_html | truncate: 250 | replace: 'Description', '' }} <span class="more"><a href="{{ product.url }}">{{ 'products.product.read_more' | t }}</a></span></p>
+            {% if product.type contains 'Digital' %}
+            <h3 class="digital-product"><i class="icon-download"></i> {{ 'products.product.digital' | t }}</h3>
+            {% endif %}
+            {% for collection in product.collections %}
+            {% if collection.handle == 'slashie' %}
+              <h3 class="digital-product"><i class="icon-download"></i> {{ 'products.product.digital_content' | t }}</h3>
+            {% endif %}
+            {% endfor %}
+        </div>
+
+        <form action="/cart/add" method="post" enctype="multipart/form-data" id="AddToCartForm" class="form-vertical">
+  {% include 'product-customizer' %}
+
+            {% comment %}
+              Add product variants as a dropdown.
+                - By default, each variant (or combination of variants) will display as its own <option>
+                - To separate these into multiple steps, which we suggest, use option_selection.js (see below)
+
+              You can leverage jQuery to add a callback on page load and each time the select element changes:
+                - Include option_selection.js (as seen at the bottom of this file)
+                - This allows you to use JavaScript anytime the variant dropdown changes
+                - This also separates out your variant options (ie. size, color, etc.) to separate select elements
+
+              For more information on products with multiple options, visit:
+                - http://docs.shopify.com/support/your-website/themes/can-i-make-my-theme-use-products-with-multiple-options#update-product-liquid
+            {% endcomment %}
+            <select name="id" id="productSelect" class="product-single__variants">
+              {% for variant in product.variants %}
+                {% if variant.available %}
+
+                  {% comment %}
+                    Note: if you use option_selection.js, your <select> tag will be overwritten, meaning what you have inside <option> will not reflect what you coded below.
+                  {% endcomment %}
+                  <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} data-sku="{{ variant.sku }}" value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money_with_currency }}</option>
+
+                {% else %}
+                  <option disabled="disabled">
+                    {{ variant.title }} - {{ 'products.product.sold_out' | t }}
+                  </option>
+                {% endif %}
+              {% endfor %}
+            </select>
+            <div class="defaultPrice"></div>
+
+            <span class="visually-hidden">{{ 'products.general.regular_price' | t }}</span>
+            <span id="ProductPrice" class="h2" itemprop="price" content="{{ current_variant.price | divided_by: 100 }}">
+              {{ current_variant.price | money }}
+            </span>
+
+            {% if product.compare_at_price_max > product.price %}
+              <span class="visually-hidden">{{ 'products.general.sale_price' | t }}</span>
+              <p id="ComparePrice">
+                {{ 'products.product.compare_at' | t }} {{ current_variant.compare_at_price | money }}
+              </p>
+            {% endif %}
+
+            <label for="Quantity" class="quantity-selector">{{ 'products.product.quantity' | t }}</label>
+            <input type="number" id="Quantity" name="quantity" value="1" min="1" class="quantity-selector">
+
+            <button type="submit" name="add" id="AddToCart" class="btn btn--secondary btn--large">
+              <span id="AddToCartText">{{ 'products.product.add_to_cart' | t }}</span>
+            </button>
+          </form>
+    </div>
+    <a class="close-reveal-modal">&#215;</a>
+</div>
+
+<script>  
+  jQuery(function($) {
+    // Hide selectors if we only have 1 variant and its title contains 'Default'.
+    {% if product.variants.size == 1 and product.variants.first.title contains 'Default' %}
+      $('#myModal{{ product.url | within: collection | replace: '/', '-' }} #productSelect').hide();
+      $('#myModal{{ product.url | within: collection | replace: '/', '-' }} .defaultPrice').html( '{{ product.variants.first.price | money_with_currency }}' );
+    {% endif %}
+  });
+</script>

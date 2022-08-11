@@ -1,0 +1,46 @@
+<div class="dj-product-tabs-wrap">
+    <div id="dj-product-tabs">          
+        <div class="cd-tabs">
+            <nav>
+                <ul class="cd-tabs-navigation">
+                    <li><a data-content="reviews" class="selected" href="#0">{{ 'products.general.productReviews' | t }}</a></li>
+                    <li><a data-content="shipping" href="#0">{{ 'products.general.shippingInfo' | t }}</a></li>
+                </ul> <!-- cd-tabs-navigation -->
+            </nav>
+         
+            <ul class="cd-tabs-content">
+                <li data-content="reviews" class="selected">
+                    <div class="grid">
+                        <div class="grid__item large--one-whole">
+                            <div class="quotation">                                
+                                <div id="shopify-product-reviews" data-id="{{ product.id }}">{{ product.metafields.spr.reviews }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li id="shipping-info" data-content="shipping">
+                    <div class="grid physical">
+                        <div class="grid__item large--one-half">
+                            <h2>{{ 'products.general.estimatedDelivery_html' | t }}</h2>
+                            <dl>{{ 'products.general.shipMethodSummaryList_html' | t }}</dl>
+                        </div>
+                        <div class="grid__item large--one-half">
+                            <img src="{{ 'physicalproducts.jpg' | asset_url }}">
+                        </div>
+                    </div>
+                    <div class="grid digital">
+                        <div class="grid__item large--one-half">
+                            <img src="{{ 'digitalproducts.jpg' | asset_url }}">
+                        </div>
+                        <div class="grid__item large--one-half">
+                            <h2>{{ 'products.general.digitalContent_html' | t }}</h2>
+                            <p>{{ 'products.general.digitalShipInfo_html' | t }}</p>
+                        </div>
+                    </div>
+                </li>
+            </ul> <!-- cd-tabs-content -->
+        </div> <!-- cd-tabs -->
+    </div>    
+</div><div class="clear"></div>
+
+{{ 'responsivetabs.js' | asset_url | script_tag }}

@@ -1,0 +1,152 @@
+<!-- /templates/index.liquid -->
+{% comment %}
+
+  This is the homepage of your site.
+
+  More info on global variables (available on all templates):
+    - http://docs.shopify.com/themes/liquid-variables/global
+{% endcomment %}
+
+<section class="hero {{ settings.home_hero_theme }}" style="height:{{ settings.home_hero_height }}; max-height:{{ settings.home_hero_height }};">
+  {% if settings.home_hero_coverr %}
+  <div class="video-container" style="height:{{ settings.home_hero_height }}; max-height:{{ settings.home_hero_height }};" data-coverr-height="{{ settings.home_hero_height }}">
+        <div class="filter" style="height:{{ settings.home_hero_height }}; margin-top:0;"></div>
+        <video autoplay loop class="fillWidth">
+            <source src="https://danijohnsonshop.s3.amazonaws.com/covers/{{ settings.coverr_id }}.mp4" type="video/mp4" />Your browser does not support the video tag. Please upgrade your browser.
+            <source src="https://danijohnsonshop.s3.amazonaws.com/covers/{{ settings.coverr_id }}.webm" type="video/webm" />Your browser does not support the video tag. Please upgrade your browser.
+        </video>
+        <div id="coverr-poster" class="poster fade-out">
+            <img src="https://danijohnsonshop.s3.amazonaws.com/covers/{{ settings.coverr_id }}.jpg" alt="">
+        </div>
+    {% else %}
+    <div class="hero-bg">
+    <img src="{{ 'home_hero_background.jpg' | asset_img_url: '1400x522' }}" alt="">
+  </div>
+    {% endif %}
+    <div class="dj-container vertical-center vertical-offset hero-container">
+      <div class="hero-feature">
+        {% if settings.home_hero_content == "title" %}
+          <h1>{{ settings.home_hero_title }}</h1>
+          <h4>{{ settings.home_hero_subtitle }}</h4>
+        {% elsif settings.home_hero_content == "testimonial" %}
+          {% include 'header-testimonials' %}
+        {% elsif settings.home_hero_content == "product" %}
+          {% include 'featured-product' %}
+        {% else %}
+          <!-- section intentionally empty -->
+        {% endif %}
+      </div>
+    </div>
+    <div class="dj-container">
+      <a id="{{ settings.home_hero_bar_id }}" href="{{ settings.home_hero_bar_url }}"><div class="hero-bottom-bar btn-fade">
+        <span>★</span> {{ settings.home_hero_bar_text }} <span>★</span>
+      </div></a>
+    </div>
+    {% if settings.home_hero_coverr %}</div>{% endif %}
+</section>
+
+<div class="clearfix"></div>
+
+{% if settings.home_hero_coverr %}
+  {{ 'coverr.js' | asset_url | script_tag }}
+{% endif %}
+
+<main class="wrapper main-content home" role="main">
+
+  <!-- ALL COLLECTIONS -->
+  {% for collection in collections %}
+
+    {% comment %}
+      Only display specified collections on the Home page. These can be customized with a comma-separated list in the Theme Customization Settings, under "Collections"
+    {% endcomment %}
+    {% assign home_collections = settings.home_collections | split: ', ' %}
+    {% if home_collections contains collection.handle %}
+
+      {% assign isEmpty = false %}
+
+      {% capture collection_title %}{{ collection.title | escape | replace: '&amp;', 'and' }}{% endcapture %}
+      <h2 class="collection-title"><a href="{{ collection.url }}" title="{{ 'collections.general.link_title' | t: title: collection_title }}">{{ collection.title }}
+        <span>{{ 'collections.general.items_with_count' | t: count: collection.all_products_count }}</span></a>
+      </h2>
+
+      <div class="grid-uniform">
+        {% for product in collection.products limit:4 %}
+  {% if product.object_type == 'product' and product.type == 'SHOPSTORM_HIDDEN_PRODUCT' %}{% continue %}{% endif %}
+
+          {% assign grid_item_width = 'large--one-quarter medium--one-half' %}
+          {% include 'product-grid-item' %}
+        {% endfor %}
+      </div>
+
+      <hr>
+
+    {% endif %}
+  {% endfor %}
+  <!-- end all collections -->
+
+  {% comment %}
+    Use class grid-uniform to have evenly sized columns clear
+    each other properly at each breakpoint.
+  {% endcomment %}
+
+  <div class="box-dark">
+    <h2 class="section-title">{{ 'homepage.sections.best_sellers_1' | t }} <span>{{ 'homepage.sections.best_sellers_2' | t }}</span></h2>
+  </div>
+  <div class="grid-uniform box-dark no-pad-top">
+
+    {% comment %}
+      Loop through products in your Frontpage collection.
+      This collection is created by default, but you must add products to it.
+    {% endcomment %}
+    {% for product in collections.frontpage.products limit:4 %}
+  {% if product.object_type == 'product' and product.type == 'SHOPSTORM_HIDDEN_PRODUCT' %}{% continue %}{% endif %}
+
+
+      {% comment %}
+        Change the grid item width by using classes from the grid in
+        the grid_item_width variable.
+
+        Example:
+          - {% assign grid_item_width = 'large--one-third medium--one-half' %}
+      {% endcomment %}
+      {% assign grid_item_width = 'large--one-quarter medium--one-half' %}
+      {% include 'product-grid-item' %}
+
+    {% else %}
+      {% comment %}
+        For onboarding new users to your theme, we add some default products and onboarding tutorials to help populate their store
+      {% endcomment %}
+      {% unless emptyState %}
+        {{ 'theme-onboarding.css' | global_asset_url | stylesheet_tag }}
+        {% assign emptyState = true %}
+      {% endunless %}
+
+      {% include 'onboarding-featured-products' %}
+
+    {% endfor %}
+
+  </div>
+
+  <hr>
+  <div class="lower-ad grid">
+    <div class="grid__item large--one-third">
+      <div class="inner">
+        <a id="{{ settings.home_lower_ad_small_id }}" href="{{ settings.home_lower_ad_small_url }}">
+          <img src="{{ 'home_lower_ad_small.jpg' | asset_img_url: '718x300' }}">
+        </a>
+      </div>
+    </div>
+    <div class="grid__item large--two-thirds">
+      <div class="inner">
+        <a id="{{ settings.home_lower_ad_big_id }}" href="{{ settings.home_lower_ad_big_url }}">
+          <img src="{{ 'home_lower_ad_big.jpg' | asset_img_url: '747x150' }}">
+        </a>
+      </div>
+    </div>
+  </div>
+  <hr>
+
+</main>
+
+<!-- when adding to cart from within quick view modal dialog, hide the modal -->
+{{ 'reveal-modal-destroy.js' | asset_url | script_tag }}

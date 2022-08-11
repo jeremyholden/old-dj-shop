@@ -1,0 +1,33 @@
+{% for link in linklists.main-menu-2017.links %}
+{% assign child_list_handle = link.title | handle %}
+{% if linklists[child_list_handle] and linklists[child_list_handle].links.size > 0 %}
+<li class="menu-item menu-item-has-children">
+    {{ link.title | link_to: link.url }}
+    <ul class="sub-menu">
+        {% for child_link in linklists[child_list_handle].links %}
+        {% assign grand_child_list_handle = child_link.title | handle %}
+        {% if linklists[grand_child_list_handle] and linklists[grand_child_list_handle].links.size > 0 %}
+        <li class="menu-item menu-item-has-children">
+            {{ child_link.title | link_to: child_link.url }}
+            <ul>
+                {% for grand_child_link in linklists[grand_child_list_handle].links %}
+                <li class="menu-item">
+                  {{ grand_child_link.title | link_to: grand_child_link.url }}
+                </li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% else %}
+        <li class="menu-item">
+          {{ child_link.title | link_to: child_link.url }}
+        </li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+</li>
+{% else %}
+<li class="menu-item">
+  {{ link.title | link_to: link.url }}
+</li>
+{% endif %}
+{% endfor %}

@@ -1,0 +1,35 @@
+<div class="header-testimonial slider">
+  <div class="testimonial">
+    <div class="client-photo grid__item large--one-third medium-one-whole">
+      <img src="{{ 'home_hero_test1_image.jpg' | asset_img_url: '400x400' }}">
+    </div>
+    <div class="inner-content grid__item large--two-thirds medium-one-whole">
+      <h2>{{ 'homepage.hero.client_feature' | t }}</h2>
+      <h1>{{ settings.home_hero_test1_name }}</h1>
+      <h6>{{ settings.home_hero_test1_content }}</h6>
+    </div>
+  </div>
+  <div class="testimonial">
+    <div class="client-photo grid__item large--one-third medium-one-whole">
+      <img src="{{ 'home_hero_test2_image.jpg' | asset_img_url: '400x400' }}">
+    </div>
+    <div class="inner-content grid__item large--two-thirds medium-one-whole">
+      <h2>{{ 'homepage.hero.client_feature' | t }}</h2>
+      <h1>{{ settings.home_hero_test2_name }}</h1>
+      <h6>{{ settings.home_hero_test2_content }}</h6>
+    </div>
+  </div>
+  <div class="testimonial">
+    <div class="client-photo grid__item large--one-third medium-one-whole">
+      <img src="{{ 'home_hero_test3_image.jpg' | asset_img_url: '400x400' }}">
+    </div>
+    <div class="inner-content grid__item large--two-thirds medium-one-whole">
+      <h2>{{ 'homepage.hero.client_feature' | t }}</h2>
+      <h1>{{ settings.home_hero_test3_name }}</h1>
+      <h6>{{ settings.home_hero_test3_content }}</h6>
+    </div>
+  </div>
+</div>
+
+{{ 'slick.js' | asset_url | script_tag }}
+{{ 'slick-initialize.js' | asset_url | script_tag }}

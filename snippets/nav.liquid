@@ -1,0 +1,128 @@
+<!-- MOBILE HEADER -->
+<div class="mobile-header large--hide medium-down--show">
+    <div class="search mobile-search">
+        {% include 'search-bar' %}
+    </div>
+    <button type="button" class="js-drawer-open-left" aria-controls="NavDrawer" aria-expanded="false">
+      <i id="toggle-menu" class="fa fa-bars"></i>
+    </button>
+    <a class="mobile-logo" href="http://www.danijohnson.com"></a>
+    <a href="/cart" class="js-drawer-open-right" aria-controls="CartDrawer" aria-expanded="false">
+      <i id="toggle-profile" class="fa fa-user"></i>
+    </a>
+    <i id="toggle-search" class="fa fa-search"></i>
+    <div class="clear"></div>
+</div>
+<!-- MAIN MENU -->
+<header class="header">
+    <a href="http://www.danijohnson.com" class="menu-left logo" style="background-image: url('{{ 'logo.png' | asset_url }}');"></a>
+    <div class="menu-right">
+        <!-- TOPBAR -->
+        <div class="top">
+            <ul class="top-left">
+                <li>
+                  <a href="http://www.danijohnson.com/contact">866.760.8255</a><span class="divider">|</span>
+                </li>
+                <li>
+                  <a href="http://www.danijohnson.com/contact"><i class="fa fa-envelope"></i></a>
+                </li>
+                {% include 'social' %}
+            </ul>
+            <div class="menu-profile-menu-container">
+                <ul id="menu-profile-menu-1" class="menu">
+                    {% include 'profile-menu' %}
+                </ul>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <!-- MAIN MENU - REALLY -->
+        <div class="menu container">
+            <div class="menu-main-menu-2017-container">
+                <ul id="menu-main-menu-2018" class="menu">
+                    {% include 'main-menu' %}
+                </ul>
+            </div>
+            <div class="more-wrapper">
+                <ul class="menu">
+                    <li class="more">
+                        <a href="#">More</a>
+                        <ul class="sub-menu" id="overflow"></ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="search" id="menu-search">
+                <div class="searchtoggle" id="searchtoggle">
+                  <a href="/"><i class="fa fa-search"></i></a>
+                </div>
+                {% include 'search-bar' %}
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div><!-- menu-right -->
+</header>
+<!-- //site-nav -->
+
+<!-- MAIN NAVIGATION SCRIPTS + MOBILE MENU TOGGLES -->
+<script>
+jQuery(document).ready( function(){
+    // Let's make sure we know where we are
+    $("#menu-main-menu-2018 a[href='/']").addClass("active");
+    // Toggle SearchBar
+    var searchform = $("#menu-search").find("form");
+    $("#searchtoggle").click(function(e) {
+      e.preventDefault(),
+      searchform.fadeIn(),
+      setTimeout(function() {
+          searchform.find("#s").focus()
+      }, 301)
+    });
+    $(".search-close").click(function(e) {
+      e.preventDefault(),
+      searchform.fadeOut()
+    });
+    // Mobile Sub-Menus
+    $(".mobile-menu .menu-item-has-children > a, #mobile-profile-menu .menu-item-has-children > a").click(function(e) {
+      e.preventDefault(),
+      $(this).parent().toggleClass("open"),
+      $(this).parent().find(".sub-menu").toggleClass("open")
+    })
+    // Mobile Search
+    $("#toggle-search").click(function(e) {
+      e.preventDefault(),
+      $(".mobile-header").toggleClass( "dropped" )
+    });
+    // Close the Mobile Header when clicking outside of it
+    $(document).on('click', function(event) {
+      if (!$(event.target).closest('.mobile-header').length) {
+        if ( $(".mobile-header").hasClass( "dropped" ) ) {
+          $(".mobile-header").toggleClass( "dropped" )
+        }
+      }
+    });
+    // Nav Overflow
+    window.onresize = navigationResize;
+    navigationResize();
+});
+function navigationResize() {
+  $('#menu-main-menu-2018').append($('#overflow > li'));
+
+  var $navItemMore = $('.more'),
+  		$navItems = $('#menu-main-menu-2018 > li'),
+      navItemMoreWidth = $navItemMore.width(),
+      windowWidth = $('#menu-main-menu-2018').width(),
+      navItemWidth = 0,
+      navItemMoreLeft, offset, navOverflowWidth;
+
+  $navItems.each(function() {
+    navItemWidth += $(this).width();
+  });
+
+  navItemWidth > windowWidth ? $navItemMore.show() : $navItemMore.hide();
+
+  while (navItemWidth > windowWidth) {
+    navItemWidth -= $navItems.last().width();
+    $navItems.last().prependTo('#overflow');
+    $navItems.splice(-1,1);
+  }
+}
+</script>

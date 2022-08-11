@@ -1,0 +1,102 @@
+<!-- /templates/collection.liquid -->
+{% comment %}
+
+  For more information on collection tags:
+    - http://docs.shopify.com/themes/liquid-variables/collection
+
+{% endcomment %}
+
+<header class="section-header {{ collection.handle }}">
+  <h1 class="section-header__title">{% if collection.handle == 'all' %}{{ 'collections.general.all_products' | t }}{% else %}{{ collection.title }}{% endif %}</h1>
+  {% if collection.description != blank %}
+  <div class="rte rte--header">
+    {{ collection.description }}
+  </div>
+  {% endif %}
+  <div class="gradient"></div>
+  <div class="shop-bar">{% include 'breadcrumb' %}</div>
+</header>
+
+<div class="clearfix"></div>
+
+<main class="wrapper main-content collection-grid" role="main">
+
+  {% paginate collection.products by 12 %}
+
+  <div>
+    <div class="section-header__right">
+      {% include 'collection-sorting' %}
+    </div>
+  </div>
+
+  {% comment %}
+    Use .grid--rev so that the collection tags appear below the products on mobile
+  {% endcomment %}
+  <div class="grid--rev">
+    <div class="grid__item large--one-whole grid-container">
+
+      {% comment %}
+        Use class grid-uniform to have evenly sized columns clear
+        each other properly at each breakpoint.
+      {% endcomment %}
+      <div class="grid-uniform">
+
+        {% comment %}
+          Loop through our products in the current collection.
+          See the snippet 'product-grid-item' for the layout.
+        {% endcomment %}
+        {% for product in collection.products %}
+  {% if product.object_type == 'product' and product.type == 'SHOPSTORM_HIDDEN_PRODUCT' %}{% continue %}{% endif %}
+
+          {% include 'product-grid-item' %}
+
+        {% else %}
+
+          {% if collection.handle == 'all' and current_tags == '' %}
+
+            {% comment %}
+              Add default products to help with onboarding for collections/all only
+            {% endcomment %}
+            {% unless emptyState %}
+              {{ 'theme-onboarding.css' | global_asset_url | stylesheet_tag }}
+              {% assign emptyState = true %}
+            {% endunless %}
+            {% include 'onboarding-empty-collection' %}
+
+          {% else %}
+
+            {% comment %}
+              If collection exists but is empty, display message
+            {% endcomment %}
+            <div class="grid__item">
+              <p>{{ 'collections.general.no_matches' | t }}</p>
+            </div>
+
+          {% endif %}
+
+        {% endfor %}
+
+      </div>
+
+      {% if paginate.pages > 1 %}
+        <hr>
+        <div class="pagination">
+          {{ paginate | default_pagination | replace: '&laquo; Previous', '&larr;' | replace: 'Next &raquo;', '&rarr;' }}
+        </div>
+      {% endif %}
+
+    </div>
+
+    <hr class="grey">
+
+    <div class="grid__item large--one-whole">
+      {% include 'collection-sidebar' %}
+    </div>
+  </div>
+
+  {% endpaginate %}
+
+</main>
+
+<!-- when adding to cart from within quick view modal dialog, hide the modal -->
+{{ 'reveal-modal-destroy.js' | asset_url | script_tag }}

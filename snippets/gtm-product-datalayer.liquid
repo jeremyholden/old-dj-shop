@@ -1,0 +1,46 @@
+{% comment %} Product view data layer v2.0 - part of "Shopify GA4 Kit" by Analyzify
+Visit https://analyzify.app/shopify-google-analytics/ga4 for complete tutorial 
+{% endcomment %}
+
+<script type="text/javascript">
+  window.dataLayer = window.dataLayer || [];
+
+  window.appStart = function(){
+    {% assign template_name = template.name %} 
+
+    window.productPageHandle = function(){
+      var productName = "{{ product.title | remove: "'" | remove: '"' }}";
+      var productId = "{{ product.id }}";
+      var productPrice = "{{ product.price | money_without_currency }}";
+      var productBrand = "{{ product.vendor | remove: "'" | remove: '"' }}";
+      var productCollection1 = "{{ product.collections.first.title | remove: "'" | remove: '"' }}"
+      var productCollection2 = "{{ product.collections.second.title | remove: "'" | remove: '"' }}"
+      var productCollection3 = "{{ product.collections.third.title | remove: "'" | remove: '"' }}"
+      var productCollection4 = "{{ product.collections.fourth.title | remove: "'" | remove: '"' }}"
+
+      window.dataLayer.push({
+        event: 'view_item',
+        ecommerce: {
+          items: [{
+            item_name: productName,
+            item_id: productId,
+            price: productPrice,
+            item_brand: productBrand,
+            item_category: productCollection1,
+            item_category2: productCollection2,
+            item_category3: productCollection3,
+            item_category4: productCollection4,
+            quantity: '1'
+          }]
+        }
+      });
+    };
+
+    {% case template_name %}
+    {% when 'product' %}
+    	productPageHandle()
+    {% endcase %}
+  }
+
+  appStart();
+</script>

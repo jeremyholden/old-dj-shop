@@ -46,7 +46,7 @@ $opacity-not-active: .25;
     }
 
     .slick-loading & {
-        background: #fff //cdn.shopify.com/s/files/1/1358/2839/t/3/assets/ajax-loader.gif?16406904758420181904 center center no-repeat;
+        background: #fff //cdn.shopify.com/s/files/1/1358/2839/t/4/assets/ajax-loader.gif?v=344831891803776881580764899 center center no-repeat;
     }
 
     &.dragging {
@@ -124,11 +124,11 @@ $opacity-not-active: .25;
 @if $slick-font-family == "slick" {
   @font-face {
       font-family: 'slick';
-      src: url('//cdn.shopify.com/s/files/1/1358/2839/t/3/assets/slick.eot?16406904758420181904');
-      src: url('//cdn.shopify.com/s/files/1/1358/2839/t/3/assets/slick.eot?16406904758420181904?#iefix') format("embedded-opentype"),
-           url('//cdn.shopify.com/s/files/1/1358/2839/t/3/assets/slick.woff?16406904758420181904') format("woff"),
-           url('//cdn.shopify.com/s/files/1/1358/2839/t/3/assets/slick.ttf?16406904758420181904') format("truetype"),
-           url('//cdn.shopify.com/s/files/1/1358/2839/t/3/assets/slick.svg?16406904758420181904#slick') format("svg");
+      src: url('//cdn.shopify.com/s/files/1/1358/2839/t/4/assets/slick.eot?v=171231562841723704411580764931');
+      src: url('//cdn.shopify.com/s/files/1/1358/2839/t/4/assets/slick.eot?v=171231562841723704411580764931?#iefix') format("embedded-opentype"),
+           url('//cdn.shopify.com/s/files/1/1358/2839/t/4/assets/slick.woff?v=111354281175319789571580764935') format("woff"),
+           url('//cdn.shopify.com/s/files/1/1358/2839/t/4/assets/slick.ttf?v=51727957652983676071580764934') format("truetype"),
+           url('//cdn.shopify.com/s/files/1/1358/2839/t/4/assets/slick.svg?v=30152553386467292361580764934#slick') format("svg");
       font-weight: normal;
       font-style: normal;
   }

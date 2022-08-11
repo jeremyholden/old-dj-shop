@@ -1,3 +1,4 @@
+<style>button[name="add"], input[name="add"], button[class*="add"], input[class*="add"], .shopify-payment-button{display: none !important;}</style>
                    {% if product.type  == 'SHOPSTORM_HIDDEN_PRODUCT' %}
                      Product is not available
                      {% break %}
@@ -153,21 +154,7 @@
             <label for="Quantity" class="quantity-selector">{{ 'products.product.quantity' | t }}</label>
             <input type="number" id="Quantity" name="quantity" value="1" min="1" class="quantity-selector">
 
-            <button type="submit" name="add" id="AddToCart" class="btn btn--secondary btn--large" onclick="dataLayer.push({ 'ecommerce': null });dataLayer.push({
-              'event': 'add_to_cart',
-              'ecommerce': {
-                      'items': [{
-                      'item_id': '{{ product.id }}',
-                      'item_name': '{{ product.title | remove: "'" | remove: '"' }}',
-                      'item_brand': '{{ product.vendor | remove: "'" | remove: '"' }}',
-                      'item_category': '{{ product.collections[0].title | remove: "'" | remove: '"' }}',
-                      'item_variant': '{{ product.selected_variant.sku }}',
-                      'currency': '{{ shop.currency }}',
-                      'price': '{{ product.price  | times: 0.01}}',
-                  'quanity': 1
-                      }]
-                  }
-              });">
+            <button type="submit" name="add" id="AddToCart" class="btn btn--secondary btn--large">
               <span id="AddToCartText">{{ 'products.product.add_to_cart' | t }}</span>
             </button>
           </form>

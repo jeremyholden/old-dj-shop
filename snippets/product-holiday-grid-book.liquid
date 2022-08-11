@@ -58,9 +58,13 @@
     <h1>{{ product.title | replace: '- Black Friday', '' }}</h1>
     <p>{{ product.description }}</p>
     <!-- ADD TO CART -->
-    <form action="/cart/add" method="post" id="AddToCartForm">
+    <form action="/cart/add" data-productid="{{ product.id }}" method="post" id="AddToCartForm">
+<!-- Begin ReCharge code -->
+{% if product.available %}{% include 'subscription-product' %}{% endif %}
+<!-- End ReCharge code -->
+
       {% include 'product-customizer' %}
-      <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+      <input type="hidden" name="id" data-productid="{{ product.id }}" value="{{ product.variants.first.id }}">
       <div>
         <button type="submit" name="add" id="AddToCart" class="btn btn--secondary">
           <span id="AddToCartText">{{ 'products.product.add_to_cart' | t }}</span>

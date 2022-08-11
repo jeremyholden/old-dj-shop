@@ -350,6 +350,10 @@ var ajaxCart = (function(module, $) {
     $cartContainer.append(template(data));
 
     cartCallback(cart);
+    if (window.BOLD && BOLD.common && BOLD.common.eventEmitter &&
+        typeof BOLD.common.eventEmitter.emit === 'function'){
+      BOLD.common.eventEmitter.emit('BOLD_COMMON_cart_loaded',undefined,buildCart);
+    }
   };
 
   cartCallback = function(cart) {

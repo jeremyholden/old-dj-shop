@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="{{ locale }}" dir="{{ direction }}" class="{{ checkout_html_classes }}">
   <head>
+    <!-- Google Tag Manager -->
+      <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-MWDFCB5');</script>
+    <!-- End Google Tag Manager -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, height=device-height, minimum-scale=1.0, user-scalable=0">
@@ -24,6 +31,12 @@
   {% endfor %}
 
   <body>
+    <!-- Google Tag Manager (noscript) -->
+		<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MWDFCB5"
+		height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
+    {{ skip_to_content_link }}
+    
     <div class="banner" data-header>
       <div class="wrap">
         {% if SN %}<!-- SMARTER NETWORKER branch -->
@@ -41,21 +54,6 @@
 
     <div class="content" data-content>
       <div class="wrap">
-        <div class="sidebar" role="complementary">
-          <div class="sidebar__header">
-            {% if SN %}<!-- SMARTER NETWORKER branch -->
-              <a href="http://www.smarternetworker.com" class="logo logo--center">
-                <h1 class="logo__text visually-hidden">Smarter Networker</h1>
-                <img alt="Smarter Networker" class="logo__image logo__image--large" src="//cdn.shopify.com/s/files/1/1358/2839/files/smarternetworker_logo.png?11480043959532550873">
-              </a>
-            {% else %}
-              {{ content_for_logo }}
-            {% endif %}
-          </div>
-          <div class="sidebar__content">
-            {{ content_for_order_summary }}
-          </div>
-        </div>
         <div class="main" role="main">
           <div class="main__header">
             {% if SN %}<!-- SMARTER NETWORKER branch -->
@@ -76,52 +74,43 @@
             {{ content_for_footer }}
           </div>
         </div>
+        <div class="sidebar" role="complementary">
+          <div class="sidebar__header">
+            {% if SN %}<!-- SMARTER NETWORKER branch -->
+              <a href="http://www.smarternetworker.com" class="logo logo--center">
+                <h1 class="logo__text visually-hidden">Smarter Networker</h1>
+                <img alt="Smarter Networker" class="logo__image logo__image--large" src="//cdn.shopify.com/s/files/1/1358/2839/files/smarternetworker_logo.png?11480043959532550873">
+              </a>
+            {% else %}
+              {{ content_for_logo }}
+            {% endif %}
+          </div>
+          <div class="sidebar__content">
+            {{ content_for_order_summary }}
+          </div>
+        </div>
       </div>
     </div>
 
     {{ tracking_code }}
 
-    {% comment %}
-    This script grabs the referrer from the document via javascript. Keeping it here just in case
-    <script>
-        $( document ).ready(function() {
-         $referrer = extractRootDomain( document.referrer );
-         console.log( "The Referree is: " + $referrer );
-         if ( $referrer.includes( "smarternetworker" )) {
-             $smarter = true;
-         } else { $smarter = false }
-         console.log( "Smarter?: " + $smarter );
-        });
-        function extractHostname(url) {
-          var hostname;
-          //find & remove protocol (http, ftp, etc.) and get hostname
+    {% if SN %}
+      {% assign fb_id = "SN_PURCHASE" %}
+    {% else %}
+      {% assign fb_id = "GENERAL_PURCHASE" %}
+    {% endif %}
 
-          if (url.indexOf("://") > -1) {
-              hostname = url.split('/')[2];
-          }
-          else {
-              hostname = url.split('/')[0];
-          }
 
-          //find & remove port number
-          hostname = hostname.split(':')[0];
-          //find & remove "?"
-          hostname = hostname.split('?')[0];
 
-          return hostname;
-        }
-        function extractRootDomain(url) {
-          var domain = extractHostname(url),
-              splitArr = domain.split('.'),
-              arrLen = splitArr.length;
+	{% if SN %}
 
-          //extracting the root domain here
-          if (arrLen > 2) {
-              domain = splitArr[arrLen - 2] + '.' + splitArr[arrLen - 1];
-          }
-          return domain;
-        }
-    </script>
-    {% endcomment %}
+		<!-- Smarter Networker FACEBOOK PIXEL: {{ fb_id }} -->
+
+	{% else %}
+
+		<!-- FACEBOOK PIXEL: {{ fb_id }} -->
+
+	{% endif %}
+
   </body>
 </html>

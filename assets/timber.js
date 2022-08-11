@@ -184,10 +184,6 @@ timber.accessibleNav = function () {
 timber.drawersInit = function () {
   timber.LeftDrawer = new timber.Drawers('NavDrawer', 'left');
   
-    timber.RightDrawer = new timber.Drawers('CartDrawer', 'right', {
-      'onDrawerOpen': ajaxCart.load
-    });
-  
 };
 
 timber.mobileNavToggle = function () {
@@ -241,7 +237,7 @@ timber.productPage = function (options) {
     // Also update and show the product's compare price if necessary
     if (variant.compare_at_price > variant.price) {
       $comparePrice
-        .html("Compare at" + ' ' + Shopify.formatMoney(variant.compare_at_price, moneyFormat))
+        .html("Valued at" + ' ' + Shopify.formatMoney(variant.compare_at_price, moneyFormat))
         .show();
     } else {
       $comparePrice.hide();

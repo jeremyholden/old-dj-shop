@@ -1,84 +1,58 @@
 <!-- MOBILE HEADER -->
 <div class="mobile-header large--hide medium-down--show">
-    <div class="search mobile-search">
-        {% include 'search-bar' %}
+    <div class="mobile-search">
+        <form action="/search" method="get" class="mobile-search-form" role="search">
+          <input type="hidden" name="type" value="product">
+          <input id="s" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}" class="search-field" aria-label="{{ 'general.search.placeholder' | t }}">
+          <button type="submit" class="btn icon-fallback-text search-submit"><i class="fa fa-search"></i></button>
+          <a href="/" class="search-close"><i class="fa fa-close"></i></a>
+        </form>
     </div>
     <button type="button" class="js-drawer-open-left" aria-controls="NavDrawer" aria-expanded="false">
       <i id="toggle-menu" class="fa fa-bars"></i>
     </button>
-    <a class="mobile-logo" href="http://www.danijohnson.com"></a>
+  	{% if request.host == 'shop.destinyglobal.com' %}
+	  <a class="mobile-logo dg" href="https://destinyglobal.com"></a>
+  	{% else %}
+	  <a class="mobile-logo djc" href="{% if SN %}http://www.smarternetworker.com{% else %}http://www.danijohnson.com{% endif %}"></a>
+  	{% endif %}
     <a href="/cart" class="js-drawer-open-right" aria-controls="CartDrawer" aria-expanded="false">
       <i id="toggle-profile" class="fa fa-user"></i>
     </a>
     <i id="toggle-search" class="fa fa-search"></i>
     <div class="clear"></div>
 </div>
-<!-- MAIN MENU -->
-<header class="header">
-    <a href="http://www.danijohnson.com" class="menu-left logo" style="background-image: url('{{ 'logo.png' | asset_url }}');"></a>
-    <div class="menu-right">
-        <!-- TOPBAR -->
-        <div class="top">
-            <ul class="top-left">
-                <li>
-                  <a href="http://www.danijohnson.com/contact">866.760.8255</a><span class="divider">|</span>
-                </li>
-                <li>
-                  <a href="http://www.danijohnson.com/contact"><i class="fa fa-envelope"></i></a>
-                </li>
-                {% include 'social' %}
-            </ul>
-            <div class="menu-profile-menu-container">
-                <ul id="menu-profile-menu-1" class="menu">
-                    {% include 'profile-menu' %}
-                </ul>
-            </div>
-            <div class="clear"></div>
-        </div>
-        <!-- MAIN MENU - REALLY -->
-        <div class="menu container">
-            <div class="menu-main-menu-2017-container">
-                <ul id="menu-main-menu-2018" class="menu">
-                    {% include 'main-menu' %}
-                </ul>
-            </div>
-            <div class="more-wrapper">
-                <ul class="menu">
-                    <li class="more">
-                        <a href="#">More</a>
-                        <ul class="sub-menu" id="overflow"></ul>
-                    </li>
-                </ul>
-            </div>
-            <div class="search" id="menu-search">
-                <div class="searchtoggle" id="searchtoggle">
-                  <a href="/"><i class="fa fa-search"></i></a>
-                </div>
-                {% include 'search-bar' %}
-            </div>
-            <div class="clear"></div>
-        </div>
-    </div><!-- menu-right -->
-</header>
-<!-- //site-nav -->
+
+{% include 'nav-desktop' %}
+
+<!-- Sticky Nav -->
+<script>
+    jQuery(window).scroll(function() {
+      if( $(this).scrollTop() > $('#page-wrapper').offset().top ) {
+        $("#stickynav").fadeIn();
+      } else {
+        $("#stickynav").fadeOut();
+      }
+    });
+</script>
 
 <!-- MAIN NAVIGATION SCRIPTS + MOBILE MENU TOGGLES -->
 <script>
 jQuery(document).ready( function(){
     // Let's make sure we know where we are
-    $("#menu-main-menu-2018 a[href='/']").addClass("active");
+    $(".menu-main-menu-2018 a[href='/']").addClass("active");
     // Toggle SearchBar
-    var searchform = $("#menu-search").find("form");
-    $("#searchtoggle").click(function(e) {
+    $(".searchtoggle").click(function(e) {
+      var searchform = $(this).parent().find("form");
       e.preventDefault(),
       searchform.fadeIn(),
       setTimeout(function() {
-          searchform.find("#s").focus()
+        searchform.find("#s").focus()
       }, 301)
     });
     $(".search-close").click(function(e) {
       e.preventDefault(),
-      searchform.fadeOut()
+      $(this).parent().fadeOut()
     });
     // Mobile Sub-Menus
     $(".mobile-menu .menu-item-has-children > a, #mobile-profile-menu .menu-item-has-children > a").click(function(e) {
@@ -104,25 +78,27 @@ jQuery(document).ready( function(){
     navigationResize();
 });
 function navigationResize() {
-  $('#menu-main-menu-2018').append($('#overflow > li'));
+  $('.menu-main-menu-2018').each(function(){
+    $(this).append($('#overflow > li'));
 
-  var $navItemMore = $('.more'),
-  		$navItems = $('#menu-main-menu-2018 > li'),
-      navItemMoreWidth = $navItemMore.width(),
-      windowWidth = $('#menu-main-menu-2018').width(),
-      navItemWidth = 0,
-      navItemMoreLeft, offset, navOverflowWidth;
+    var $navItemMore = $(this).parent().find('.more'),
+    		$navItems = $(this).parent().find('.menu-main-menu-2018 > li'),
+        navItemMoreWidth = $navItemMore.width(),
+        windowWidth = $(this).width(),
+        navItemWidth = 0,
+        navItemMoreLeft, offset, navOverflowWidth;
 
-  $navItems.each(function() {
-    navItemWidth += $(this).width();
+    $navItems.each(function() {
+      navItemWidth += $(this).width();
+    });
+
+    navItemWidth > windowWidth ? $navItemMore.show() : $navItemMore.hide();
+
+    while (navItemWidth > windowWidth) {
+      navItemWidth -= $navItems.last().width();
+      $navItems.last().prependTo('#overflow');
+      $navItems.splice(-1,1);
+    }
   });
-
-  navItemWidth > windowWidth ? $navItemMore.show() : $navItemMore.hide();
-
-  while (navItemWidth > windowWidth) {
-    navItemWidth -= $navItems.last().width();
-    $navItems.last().prependTo('#overflow');
-    $navItems.splice(-1,1);
-  }
 }
 </script>

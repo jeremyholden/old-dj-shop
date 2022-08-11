@@ -58,7 +58,7 @@
             {% unless gift_card.enabled %}
               <span class="giftcard__tag">{{ 'gift_cards.issued.disabled' | t }}</span>
             {% endunless %}
-            {% assign gift_card_expiry_date = gift_card.expires_on | date: "%d/%m/%y" %}
+            {% assign gift_card_expiry_date = gift_card.expires_on | date: "%m/%d/%y" %}
             {% if gift_card.expired and gift_card.enabled %}
                <span class="giftcard__tag">{{ 'gift_cards.issued.expired' | t: expiry: gift_card_expiry_date }}</span>
             {% endif %}

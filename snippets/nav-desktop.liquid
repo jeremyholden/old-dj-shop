@@ -1,0 +1,52 @@
+<!-- MAIN MENU -->
+<header class="header">
+  {% if request.host == 'shop.destinyglobal.com' %}
+    <a href="http://destinyglobal.com" class="menu-left logo" style="background-image: url('{{ 'temp-logo-navy.png' | asset_url }}'); padding: 5px 50px 5px 20px; background-origin: content-box;"></a>
+  {% else %}
+  	<a href="{% if SN %}http://www.smarternetworker.com{% else %}http://www.danijohnson.com{% endif %}" class="menu-left logo" style="background-image: url('{{ 'logo.png' | asset_url }}');"></a>
+  {% endif %}
+    <div class="menu-right">
+        <!-- TOPBAR -->
+        <div class="top">
+            <ul class="top-left">
+                <li>
+                  <a href="http://www.danijohnson.com/contact">866.760.8255</a><span class="divider">|</span>
+                </li>
+                <li>
+                  <a href="http://www.danijohnson.com/contact"><i class="fa fa-envelope"></i></a>
+                </li>
+                {% include 'social' %}
+            </ul>
+            <div class="menu-profile-menu-container">
+                <ul id="menu-profile-menu-1" class="menu">
+                    {% include 'profile-menu' %}
+                </ul>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <!-- MAIN MENU - REALLY -->
+        <div class="menu container">
+            <div class="menu-main-menu-container">
+                <ul class="menu menu-main-menu-2018">
+                    {% include 'main-menu' %}
+                </ul>
+            </div>
+            <div class="more-wrapper">
+                <ul class="menu">
+                    <li class="more">
+                        <a href="#">More</a>
+                        <ul class="sub-menu" id="overflow"></ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="search" id="menu-search">
+                <div class="searchtoggle" id="searchtoggle">
+                  <a href="/"><i class="fa fa-search"></i></a>
+                </div>
+                {% include 'search-bar' %}
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div><!-- menu-right -->
+</header>
+<!-- //site-nav -->

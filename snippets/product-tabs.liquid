@@ -13,7 +13,16 @@
                     <div class="grid">
                         <div class="grid__item large--one-whole">
                             <div class="quotation">                                
-                                <div id="shopify-product-reviews" data-id="{{ product.id }}">{{ product.metafields.spr.reviews }}</div>
+                                
+  <div id="stamped-main-widget" class="stamped-main-widget"
+data-product-id="{{ product.id }}"
+data-name="{{ product.title | escape }}"
+data-url="{{ shop.url }}{{ product.url }}"
+data-image-url="{{ product.featured_image | product_img_url: "large" |replace: '?', '%3F' | replace: '&','%26'}}"
+data-description="{{ product.description | escape }}"
+data-product-sku="{{product.handle}}">
+  {{ product.metafields.stamped.reviews }}
+</div>
                             </div>
                         </div>
                     </div>

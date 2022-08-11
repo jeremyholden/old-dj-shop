@@ -1,3 +1,6 @@
+<!-- Begin ReCharge code -->
+{% include 'subscription-cart-footer' %}
+<!-- End ReCharge code -->
 <!-- /templates/cart.liquid -->
 {% comment %}
 
@@ -12,6 +15,15 @@
 {% if cart.item_count > 0 %}
 
   <h1>{{ 'cart.general.title' | t }}</h1>
+  
+  
+  <script type="text/javascript">
+      // view_cart
+      window.dataLayer = window.dataLayer || [];
+      var ga4_item = [];
+  </script>
+  
+  
   <form action="/cart" method="post" novalidate class="cart table-wrap">
     <table class="cart-table full table--responsive">
       <thead class="cart__row cart__header-labels">
@@ -22,6 +34,21 @@
       </thead>
       <tbody>
         {% for item in cart.items %}
+        
+        <script type="text/javascript">
+          // view_cart
+          ga4_item.push({
+          	item_id: '{{ item.product.id }}',
+            item_name: '{{ item.product.title | remove: "'" | remove: '"' }}',
+            item_brand: '{{ item.product.vendor | remove: "'" | remove: '"' }}',
+            item_category: '{{ item.product.collections[0].title | remove: "'" | remove: '"' }}',
+            item_variant: '{{ item.product.selected_variant.sku }}',
+            currency: '{{ shop.currency }}',
+            price: '{{ item.product.price  | times: 0.01}}',
+            quantity: '{{ item.quantity }}'
+          });
+        </script>
+        
           <tr class="cart__row table__section">
             <td data-label="{{ 'customer.order.product' | t }}">
               <a href="{{ item.url | within: collections.all }}" class="cart__image">
@@ -54,7 +81,7 @@
               {% assign property_size = item.properties | size %}
               {% if property_size > 0 %}
                 {% for p in item.properties %}
-                  {% unless p.last == blank %}
+                  {% unless p.last == blank or p.first == "subscription_id" or p.first == "shipping_interval_frequency" or p.first == "shipping_interval_unit_type" %}
                     {{ p.first }}:
 
                     {% comment %}
@@ -71,7 +98,23 @@
                 {% endfor %}
               {% endif %}
 
-              <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0" class="cart__remove">
+              <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0" class="cart__remove"
+                  onclick="dataLayer.push({ 'ecommerce': null });dataLayer.push({
+                  'event': 'remove_from_cart',
+                  'ecommerce': {
+                          'items': [{
+                          'item_id': '{{ item.product.id }}',
+                          'item_name': '{{ item.product.title | remove: "'" | remove: '"' }}',
+                          'item_brand': '{{ item.product.vendor | remove: "'" | remove: '"' }}',
+                          'item_category': '{{ item.product.collections[0].title | remove: "'" | remove: '"' }}',
+                          'item_variant': '{{ item.product.selected_variant.sku }}',
+                          'currency': '{{ shop.currency }}',
+                          'price': '{{ item.product.price  | times: 0.01}}',
+                      'quantity': 0
+                          }]
+                      }
+                  });"
+              >
                 <small>{{ 'cart.general.remove' | t }}</small>
               </a>
             </td>
@@ -118,10 +161,29 @@
         {% endif %}
         <p><em>{{ 'cart.general.shipping_at_checkout' | t }}</em></p>
         <input type="submit" name="update" class="btn btn--large update-cart" value="{{ 'cart.general.update' | t }}">
-        <input type="submit" name="checkout" class="btn--large btn--secondary" value="{{ 'cart.general.checkout' | t }}">
+        <input type="submit" name="checkout" class="btn--large btn--secondary" value="{{ 'cart.general.checkout' | t }}"
+               onclick="dataLayer.push({ 'ecommerce': null });dataLayer.push({
+                   		'event': 'begin_checkout',
+                        'ecommerce': {
+                        'items': ga4_item
+                        }
+                        });"
+        >
       </div>
     </div>
   </form>
+  
+  <script type="text/javascript">
+  // view_cart
+    window.dataLayer.push({
+    event: 'view_cart',
+    ecommerce: {
+      items: ga4_item
+      }
+  	});
+  </script>
+  
+  
 {% else %}
   {% comment %}
     The cart is empty
